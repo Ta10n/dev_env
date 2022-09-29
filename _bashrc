@@ -1,0 +1,59 @@
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+	. /etc/bashrc
+fi
+
+if [ -f ${HOME}/.git-completion.bash ]; then
+  . ${HOME}/.git-completion.bash
+fi
+
+export GIT_COMPLETION_CHECKOUT_NO_GUESS=1
+export GIT_COMPLETION_SHOW_ALL=1
+# Uncomment the following line if you don't like systemctl's auto-paging feature:
+# export SYSTEMD_PAGER=
+
+# User specific aliases and functions
+test -s ~/bin/bladefunctions && . ~/bin/bladefunctions || true
+export PATH=~/bin:$PATH
+alias bh='blade -h'
+alias bb='blade build'
+alias br='blade run'
+alias bt='blade test'
+alias bc='blade clean'
+alias ll="ls -al --color --time-style='+%F %T'"
+alias vi=v8
+
+# Set the best locale
+function _set_locale() {
+
+    local all
+    local l
+    all=$(locale -a 2>/dev/null)
+    for l in "zh_CN.UTF-8" "zh_CN.utf8" "en_US.UTF-8" "C.UTF-8"; do
+        if [[ "$all" == *"$l"* ]]; then
+            export LC_ALL="$l"
+            return
+        fi
+    done
+    echo "Warning: Can't set correct locale" > /dev/stderr
+}
+_set_locale
+                                                              
+# Git branch in prompt.
+parse_git_branch() {
+
+    LC_ALL=C git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/ (\1)/'
+}
+#export PS1="\[\e[34;36m]\u@\h \w[\e[34;32m]\$(parse_git_branch)[\e[36;1m]$ [\e[0m]"
+#export PS1="[\e[37;1m][[\e[31;1m]\u [\e[36;1m]@ [\e[33;1m]\h [\e[35;40m]\W[\e[37;1m]] [\e[33;1m]\$[\e[0m]"
+#PS1="\[\e[34;1m\][\[\e[34;1m\]\u\[\e[34;1m\]@\[\e[34;1m\]\h\[\e[34;40m\] \w\[\e[34;1m\]\] \[\e[34;36m\]\$(parse_git_branch)\[\e[33;1m\]\\$\[\e[0m\] "
+PS1="\[\e[37;1m\]\[\e[31;1m\]\u\[\e[36;1m\]@\[\e[33;1m\]\h \[\e[34;1m\]\w \[\e[35;1m\]\$(parse_git_branch)\[\e[37;1m\]] \[\e[33;1m\]\\$\[\e[0m\] "
+
+_GREP_OPTIONS="--color --exclude-dir=.svn --exclude-dir=.git"
+alias grep="grep $_GREP_OPTIONS"
+
+if [ $TERM == "xterm" ];then
+  export TERM=xterm-256color
+fi

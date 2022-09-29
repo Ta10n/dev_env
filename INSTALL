@@ -1,0 +1,106 @@
+#!/bin/bash
+echo "checking python3..."
+if [ ! -x "python3" ];then
+  echo "need to install python3 first! Will exit"
+  exit
+fi
+
+echo "checking ${HOME}/bin exist?"
+if [ ! -d "${HOME}/bin" ];then
+  echo "${HOME}/bin not exist, will create one"
+  mkdir -p ${HOME}/bin
+fi
+echo "${HOME}/bin checked"
+
+echo "copying vim & clangd to ${HOME}/bin ..."
+cp -ar ./bin/vim ${HOME}/bin/vim && cp -ar ./bin/clangd ${HOME}/bin/clangd
+ln -s ${HOME}/bin/vim ${HOME}/bin/v8
+export PATH=$PATH:${HOME}/bin
+echo "copy done."
+
+echo "replacing ${HOME}/.bashrc..."
+if [ -f "${HOME}/.bashrc" ];then
+  cp -ar ./.git-completion.bash ${HOME}/.git-completion.bash
+  rm -f ${HOME}/.bashrc && cp -ar ./_bashrc ${HOME}/.bashrc
+fi
+echo "replace bashrc done."
+
+echo "checking ${HOME}/.vim exist?"
+if [ ! -d "${HOME}/.vim" ];then
+  mkdir -p ${HOME}/.vim/autoload && mkdir -p ${HOME}/.vim/bundle && mkdir -p ${HOME}/.vim/colors \
+    && mkdir -p ${HOME}/.vim/plugin
+fi
+echo "check .vim dir done."
+
+echo "replacing ${HOME}/.vimrc..."
+if [ -f "${HOME}/.vimrc" ];then
+  rm -f ${HOME}/.vimrc && cp _vimrc ${HOME}/.vimrc
+fi
+echo "replace vimrc done."
+
+# section for install deoplete
+echo "extracting deoplete..."
+pip3 install --user pynvim
+pip3 install --user neovim
+unzip -o ./vim_plugins/deoplete.nvim.zip -d ${HOME}/.vim/
+unzip -o ./vim_plugins/vim-hug-neovim-rpc.zip -d ${HOME}/.vim/
+unzip -o ./vim_plugins/nvim-yarp.zip -d ${HOME}/.vim/
+echo "extract deoplete done."
+# section for install LC
+echo "extracting LanguageClient..."
+unzip -o ./vim_plugins/LanguageClient-neovim.zip -d ${HOME}/.vim/bundle && cd ${HOME}/.vim/bundle/LanguageClient-neovim/ && bash ./install.sh && cd -
+echo "extract LanguageClient done."
+# section for auto-pairs
+echo "extracting auto-pairs..."
+unzip -o ./vim_plugins/auto-pairs.zip -d ${HOME}/.vim/plugin/
+echo "extract auto-pairs done."
+# section for a
+echo "extracting a.vim..."
+unzip -o ./vim_plugins/a.vim.zip -d ${HOME}/.vim/bundle
+echo "extract a.vim done."
+
+# section for asyncrun.vim
+echo "extracting asyncrun.vim..."
+unzip -o ./vim_plugins/asyncrun.vim.zip -d ${HOME}/.vim/bundle
+echo "extract asyncrun.vim done."
+# section for nerdtree
+echo "extracting nerdtree.vim..."
+unzip -o ./vim_plugins/nerdtree.zip -d ${HOME}/.vim/bundle
+echo "extract nerdtree.vim done."
+
+# section for vim-airline
+echo "extracting vim-airline..."
+unzip -o ./vim_plugins/vim-airline.zip -d ${HOME}/.vim/bundle
+echo "extract vim-airline done."
+# section for vim-airline-themes
+echo "extracting vim-airline-themes..."
+unzip -o ./vim_plugins/vim-airline-themes.zip -d ${HOME}/.vim/bundle
+echo "extract vim-airline-themes done."
+# section for LeaderF
+echo "extracting LeaderF..."
+unzip -o ./vim_plugins/LeaderF.zip -d ${HOME}/.vim/bundle
+echo "extract LeaderF done."
+
+# section for echodoc.vim
+echo "extracting echodoc.vim..."
+unzip -o ./vim_plugins/echodoc.vim.zip -d ${HOME}/.vim/bundle
+echo "extract echodoc.vim done."
+
+# section for theme ayu-vim
+echo "extracting theme ayu-vim..."
+unzip -o ./vim_plugins/ayu-vim.zip -d ${HOME}/.vim/bundle
+echo "extract theme ayu-vim done."
+# section for rainbow
+echo "extracting rainbow..."
+unzip -o ./vim_plugins/rainbow.zip -d ${HOME}/.vim/
+echo "extract theme rainbow done."
+# section for vim-cpp-enhanced-highlight
+echo "extracting vim-cpp-enhanced-highlight..."
+unzip -o ./vim_plugins/vim-cpp-enhanced-highlight.zip -d ${HOME}/.vim/
+echo "extract theme vim-cpp-enhanced-highlight done."
+
+echo "check vim versions"
+vim --version
+echo "vim install all plugins..."
+vim +'PlugInstall --sync' +qa
+echo "vim install all plugins done."
