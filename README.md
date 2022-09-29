@@ -38,3 +38,13 @@ then run command in vim
 ## check all things are ready in vim
 `echo neovim_rpc#serveraddr()`
 
+## how to generate compile_commands.json
+### Blade build system
+* install scons-compiledb `pip3 install scons-compiledb`
+* run blade `blade build --stop-after generate :some_module`
+* add `import scons_compiledb` and `scons_compiledb.enable_with_cmdline(top_env)` in generated file `SConstruct`
+* generate compile_commands.json by running `scons --compiledb=`
+
+### cmake build system
+* run camke with flag `cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=1`
+
