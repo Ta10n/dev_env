@@ -99,8 +99,4 @@ echo "extracting vim-cpp-enhanced-highlight..."
 unzip -o ./vim_plugins/vim-cpp-enhanced-highlight.zip -d ${HOME}/.vim/
 echo "extract theme vim-cpp-enhanced-highlight done."
 
-echo "check vim versions"
-vim --version
-echo "vim install all plugins..."
-vim +'PlugInstall --sync' +qa
-echo "vim install all plugins done."
+echo "all plugins installed."
